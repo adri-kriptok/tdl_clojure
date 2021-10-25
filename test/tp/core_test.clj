@@ -1,6 +1,6 @@
-(ns asdasd.core-test
+(ns tp.core-test
   (:require [clojure.test :refer :all]
-            [asdasd.core :refer :all]))
+            [tp.core :refer :all]))
 
 (deftest a-test
   (testing "FIXME, I fail."

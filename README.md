@@ -1,4 +1,4 @@
-# asdasd
+# TP Teoría de Lenguajes de Programación
 
 FIXME: description
 
@@ -10,7 +10,7 @@ Download from http://example.com/FIXME.
 
 FIXME: explanation
 
-    $ java -jar asdasd-0.1.0-standalone.jar [args]
+    $ java -jar tp_tdl-0.1.0-standalone.jar [args]
 
 ## Options
 
