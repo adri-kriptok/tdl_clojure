@@ -4,6 +4,7 @@
 (declare driver-loop)
 (declare string-a-tokens)
 (declare evaluar-linea)
+(declare cargar-archivo)
 
 (defn -main []
   (driver-loop)
@@ -35,9 +36,10 @@
       (print "> ") (flush)
       (try (let [linea (string-a-tokens (read-line)), cabeza (first linea)]
              ; Instruccion para salir del sistema.   
-             (cond  (or (= cabeza 'SALIR) (= cabeza 'EXIT)) 'GOODBYE
+             (cond  (or (= cabeza 'SALIR) (= cabeza 'EXIT))
+                    (println "ADIOS!!!")
                     (empty? linea) (driver-loop amb)
-                    :else (driver-loop (second (evaluar-linea linea (assoc amb 1 [:ejecucion-inmediata (count linea)]))))))
+                    :else (driver-loop (second (evaluar-linea linea amb)))))
            (catch Exception e (println (str "?ERROR " (get (Throwable->map e) :cause))) (driver-loop amb))))
 )
 
@@ -47,8 +49,7 @@
 (defn string-a-tokens [s]
   (let [mayu (clojure.string/upper-case s)]        
           (->> mayu
-                    (re-seq #"EXIT|SALIR|CLEAR|LIMPIAR|LOAD|CARGAR|COUNT|CONTAR|\"[^\"]*\"|\d+")                        
-                    (flatten)
+                    (re-seq #"EXIT|SALIR|CLEAR|LIMPIAR|LOAD|CARGAR|COUNT|CONTAR|\"[^\"]*\"|\d+")                    
                     (map #(symbol %)))
   )
 )
@@ -58,10 +59,34 @@
 ; mientras sea posible hacerlo
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defn evaluar-linea
-  ([sentencias amb]
-   
-   (println sentencias)
+  ([sentencia amb]
+   (println sentencia)
    (println amb)
-  )
+   
+   (case (first sentencia)
+     (CLEAR, LIMPIAR) (println "1")
+     (LOAD, CARGAR) (cargar-archivo (apply str (next sentencia)))
+     (COUNT, CONTAR) (println "3")
+    )
  )
+)
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn get-palabras [linea]
+  (println linea)
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defn cargar-archivo [nombre]
+  (println "archivo: " nombre)
+  (if (.exists (clojure.java.io/file nombre))
+    (remove empty? (with-open [rdr (clojure.java.io/reader nombre)]
+                     (doall (map get-palabras (line-seq rdr)))
+                     )
+            )
+    (println "No se encontro el archivo.")
+  ) ; File not found
+)
