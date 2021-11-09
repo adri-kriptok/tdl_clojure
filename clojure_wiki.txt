@@ -1,0 +1,186 @@
+
+
+
+Clojure
+Ir a la navegaciónIr a la búsqueda
+Clojure
+Clojure logo.svg
+Desarrollador(es)
+Richard Hickey
+https://clojure.org/
+Información general
+Extensiones comunes	clj, cljs, cljc, edn y cljr
+Paradigma	Funcional, Lenguaje de programación multiparadigma
+Apareció en	2007
+Diseñado por	Rich Hickey
+Última versión estable	(2016-01-19)
+Sistema de tipos	dinámico, fuerte
+Implementaciones	JVM, CLR, JavaScript
+Influido por	Lisp, ML, Haskell, Erlang Prolog
+Sistema operativo	Multiplataforma
+Licencia	Eclipse Public License
+[editar datos en Wikidata]
+Clojure es un lenguaje de programación de propósito general dialecto de Lisp. Hace un énfasis especial en el paradigma funcional, con el objetivo (entre otros) de eliminar la complejidad asociada a la programación concurrente. Clojure puede ser ejecutado sobre la Máquina Virtual de Java y la máquina virtual de la plataforma .NET, así como compilado a JavaScript.
+
+
+Índice
+1	Principios
+2	Sintaxis
+3	Macros
+4	Características del lenguaje
+5	Ejemplos
+6	Bibliografía
+7	Enlaces externos
+8	Referencias
+Principios
+Rich Hickey describe el desarrollo de Clojure como la búsqueda de un lenguaje que no pudo encontrar: un lisp funcional por defecto, integrado sobre un entorno robusto en lugar de ser su propia plataforma, y con la programación concurrente en mente.1?
+
+Asimismo, en principio se rechaza la orientación a objetos, ofreciendo un enfoque en el que los programas se expresan como la aplicación de funciones sobre datos, más que como la interacción entre entidades mutables que mezclan representación de datos, y comportamiento. Por otra parte, características tales como instanciabilidad, polimorfismo e interfaces son efectivamente parte del lenguaje.
+
+Sintaxis
+Como el resto de la familia Lisp, la sintaxis de Clojure está construida sobre expresiones simbólicas que son convertidas en estructuras de datos por un lector antes de ser compiladas. Las expresiones se caracterizan por estar delimitadas por paréntesis, y por su notación prefija, por la que se llama al primer miembro de cada lista como función, pasándole el resto de miembros como argumentos.
+
+Esta peculiaridad, extraña para los habituados a los lenguajes más populares basados en la sintaxis del lenguaje de programación C es la base de su flexibilidad. Estructuras de datos tales como mapas, conjuntos y vectores tienen una expresión literal; no requieren transformación alguna a la hora de incorporarse al árbol sintáctico generado por el compilador. Clojure es un Lisp-1 y no está particularmente diseñado para ser compatible con otros lisps.
+
+Macros
+Un macro es un fragmento de código que acepta como argumentos otras expresiones, sin evaluar, transformándolas previamente a su evaluación. Esto permite la aparición de "programas que crean programas": incorporaciones al lenguaje -estructuras de control de flujo- o creación de un lenguaje específico del dominio. Posibilidades en principio no alcanzables en otras familias de lenguajes sin recurrir al desarrollo de un compilador.
+
+El sistema de macros de Clojure es muy similar al de Common Lisp con la excepción de que la versión de Clojure de la comilla inversa (llamada "comilla sintáctica") cualifica los símbolos con el espacio de nombres al que pertenece. Así se ayuda a prevenir la captura no intencionada ya que están prohibidos los bindings con nombres cualificados. Es posible forzar la expansión de una macro que las capture pero debe hacerse explícitamente. Clojure prohíbe también re-enlazar nombres globales en otros espacios de nombres que hayan sido importados en el actual.
+
+Otra característica de la comilla sintáctica es que permite un sistema de templating, en el que se puede especificar qué miembros de una lista deben evaluarse mediante los operadores unquote (~) y unquote-splice (~@), dando lugar a macros más concisas y manejables.
+
+Características del lenguaje
+Desarrollo dinámico con una consola de evaluación (en inglés, REPL: read eval print loop).
+Representación de funciones como valores, y preferencia por la recursión y el uso de higher order functions sobre de la iteración basada en efectos secundarios.
+Números de precisión arbitraria, y representación literal de fracciones, generadas en las divisiones no enteras.
+Secuencias con evaluación perezosa (los elementos de la secuencia no se computan hasta que son necesarios, lo que permite representar conjuntos infinitos en potencia).
+Sistema integrado de estructuras de datos persistentes e inmutables.
+Control del estado (conjunto de valores que puede adquirir una entidad en el tiempo) en situaciones de concurrencia a través de sistemas transaccionales, de agentes y mediante bindings locales.
+Interacción con java: al compilarse a bytecode de la JVM, las aplicaciones escritas en Clojure pueden ser fácilmente integradas en servidores de aplicaciones u otros entornos Java con escasa complejidad adicional. Se implementan por defecto todas las interfaces posibles a nivel de clases, estructuras de datos y concurrencia para minimizar los esfuerzos requeridos para conseguir esta portabilidad.
+Ejemplos
+Hola mundo. Nótese que dada la naturaleza del REPL, no es necesaria una orden de impresión.
+
+"¡Hola, mundo!"
+Un generador de números únicos y consecutivos que soporta llamadas concurrentes:
+
+(let [i (atom 0)]
+  (defn generar-id-unica
+    "Devuelve un identificador numérico distinto para cada llamada."
+    []
+    (swap! i inc)))
+Una subclase anónima de java.io.Writer que no escribe en ningún sitio y una macro que lo usa para silenciar todas las expresiones evaluadas con ella.
+
+(def bit-bucket-writer
+  (proxy [java.io.Writer] []
+    (write [buf] nil)
+    (close []    nil)
+    (flush []    nil)))
+
+(defmacro noprint
+  "Evalua la expresiones dadas con todas las impresiones a *out* silenciadas."  
+  [& forms]
+  `(binding [*out* bit-bucket-writer]
+     ~@forms))
+
+(noprint
+ (println "Hello, nobody!"))
+En este ejemplo diez hilos manipulan una estructura de datos compartida, que consiste en cien vectores que contienen diez números únicos al inicio secuenciales. Cada hilo elige dos posiciones aleatorias en dos vectores aleatorios y los intercambia. Todos los cambios en los vectores se hacen dentro de transacciones usando el sistema de memoria transaccional por software de Clojure. Es por eso que incluso después de mil iteraciones no se pierde ningún número.
+
+(defn run [nvecs nitems nthreads niters]
+  (let [vec-refs (vec (map (comp ref vec)
+                           (partition nitems (range (* nvecs nitems)))))
+        swap #(let [v1 (rand-int nvecs)
+                    v2 (rand-int nvecs)
+                    i1 (rand-int nitems)
+                    i2 (rand-int nitems)]
+                (dosync
+                 (let [temp (nth @(vec-refs v1) i1)]
+                   (alter (vec-refs v1) assoc i1 (nth @(vec-refs v2) i2))
+                   (alter (vec-refs v2) assoc i2 temp))))
+        report #(do
+                 (prn (map deref vec-refs))
+                 (println "Distinct:"
+                          (count (distinct (apply concat (map deref vec-refs))))))]
+    (report)
+    (dorun (apply pcalls (repeat nthreads #(dotimes [_ niters] (swap)))))
+    (report)))
+
+(run 100 10 10 100000)
+Salida del ejemplo anterior:
+
+([0 1 2 3 4 5 6 7 8 9] [10 11 12 13 14 15 16 17 18 19] ...
+ [990 991 992 993 994 995 996 997 998 999])
+Distinct: 1000
+ 
+([382 318 466 963 619 22 21 273 45 596] [808 639 804 471 394 904 952 75 289 778] ...
+ [484 216 622 139 651 592 379 228 242 355])
+Distinct: 1000
+Bibliografía
+Halloway, Stuart (28 de mayo de 2009), Programming Clojure (1st edición), Pragmatic Bookshelf, pp. 304, ISBN 1934356336.
+VanderHart, Luke (31 de diciembre de 2009), Practical Clojure (1st edición), Apress, p. 350, ISBN 1430272317, archivado desde el original el 17 de septiembre de 2010, consultado el 10 de febrero de 2010.
+Rathore, Amit (December 2009), Clojure in Action (1st edición), Manning, p. 475, ISBN 9781935182597.
+Fogus, Michael; Houser, Chris (January 2010), The Joy of Clojure (1st edición), Manning, p. 300, ISBN 9781935182641.
+Enlaces externos
+Página principal Clojure
+Repositorio del código de Clojure en GitHub
+Una visión general sobre Clojure
+Tutoriales en vídeo
+clojuredocs.org - Community-powered documentation and examples
+clojure-doc.org - Community-driven documentation site for the Clojure programming language
+Referencias
+ «Principios fundamentales». Rich Hickey (en inglés). Consultado el 17 de octubre de 2008.
+Control de autoridades	
+Proyectos WikimediaWd Datos: Q51798Commonscat Multimedia: Category:Clojure
+IdentificadoresGND: 7722643-4LCCN: sh2011003332Microsoft Academic: 2777596660InformáticaArch Linux: clojureAUR: clojure-gitDebian: clojureFedora: clojureFree Software Directory: ClojureGentoo: dev-lang/clojureOpen Hub: clojureUbuntu: clojure
+Categorías: Lenguajes de programación por paradigmaLenguajes funcionalesLispSofware de 2007
+Menú de navegación
+No has accedido
+Discusión
+Contribuciones
+Crear una cuenta
+Acceder
+ArtículoDiscusión
+LeerEditarVer historial
+Buscar
+Buscar en Wikipedia
+Portada
+Portal de la comunidad
+Actualidad
+Cambios recientes
+Páginas nuevas
+Página aleatoria
+Ayuda
+Donaciones
+Notificar un error
+Herramientas
+Lo que enlaza aquí
+Cambios en enlazadas
+Subir archivo
+Páginas especiales
+Enlace permanente
+Información de la página
+Citar esta página
+Elemento de Wikidata
+Imprimir/exportar
+Crear un libro
+Descargar como PDF
+Versión para imprimir
+En otros proyectos
+Wikimedia Commons
+
+En otros idiomas
+???????
+Deutsch
+English
+Français
+???
+???
+Português
+???????
+??
+17 más
+Editar enlaces
+Esta página se editó por última vez el 20 abr 2021 a las 20:41.
+El texto está disponible bajo la Licencia Creative Commons Atribución Compartir Igual 3.0; pueden aplicarse cláusulas adicionales. Al usar este sitio, usted acepta nuestros términos de uso y nuestra política de privacidad.
+Wikipedia® es una marca registrada de la Fundación Wikimedia, Inc., una organización sin ánimo de lucro.
+Política de privacidadAcerca de WikipediaLimitación de responsabilidadVersión para móvilesDesarrolladoresEstadísticasDeclaración de cookiesWikimedia FoundationPowered by MediaWiki
