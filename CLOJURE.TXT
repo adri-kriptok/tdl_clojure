@@ -1,74 +1,74 @@
 
 
-
 Clojure
-Ir a la navegaciónIr a la búsqueda
+Clojure
+Ir a la navegaciï¿½nIr a la bï¿½squeda
 Clojure
 Clojure logo.svg
 Desarrollador(es)
 Richard Hickey
 https://clojure.org/
-Información general
+Informaciï¿½n general
 Extensiones comunes	clj, cljs, cljc, edn y cljr
-Paradigma	Funcional, Lenguaje de programación multiparadigma
-Apareció en	2007
-Diseñado por	Rich Hickey
-Última versión estable	(2016-01-19)
-Sistema de tipos	dinámico, fuerte
+Paradigma	Funcional, Lenguaje de programaciï¿½n multiparadigma
+Apareciï¿½ en	2007
+Diseï¿½ado por	Rich Hickey
+ï¿½ltima versiï¿½n estable	(2016-01-19)
+Sistema de tipos	dinï¿½mico, fuerte
 Implementaciones	JVM, CLR, JavaScript
 Influido por	Lisp, ML, Haskell, Erlang Prolog
 Sistema operativo	Multiplataforma
 Licencia	Eclipse Public License
 [editar datos en Wikidata]
-Clojure es un lenguaje de programación de propósito general dialecto de Lisp. Hace un énfasis especial en el paradigma funcional, con el objetivo (entre otros) de eliminar la complejidad asociada a la programación concurrente. Clojure puede ser ejecutado sobre la Máquina Virtual de Java y la máquina virtual de la plataforma .NET, así como compilado a JavaScript.
+Clojure es un lenguaje de programaciï¿½n de propï¿½sito general dialecto de Lisp. Hace un ï¿½nfasis especial en el paradigma funcional, con el objetivo (entre otros) de eliminar la complejidad asociada a la programaciï¿½n concurrente. Clojure puede ser ejecutado sobre la Mï¿½quina Virtual de Java y la mï¿½quina virtual de la plataforma .NET, asï¿½ como compilado a JavaScript.
 
 
-Índice
+ï¿½ndice
 1	Principios
 2	Sintaxis
 3	Macros
-4	Características del lenguaje
+4	Caracterï¿½sticas del lenguaje
 5	Ejemplos
-6	Bibliografía
+6	Bibliografï¿½a
 7	Enlaces externos
 8	Referencias
 Principios
-Rich Hickey describe el desarrollo de Clojure como la búsqueda de un lenguaje que no pudo encontrar: un lisp funcional por defecto, integrado sobre un entorno robusto en lugar de ser su propia plataforma, y con la programación concurrente en mente.1?
+Rich Hickey describe el desarrollo de Clojure como la bï¿½squeda de un lenguaje que no pudo encontrar: un lisp funcional por defecto, integrado sobre un entorno robusto en lugar de ser su propia plataforma, y con la programaciï¿½n concurrente en mente.1?
 
-Asimismo, en principio se rechaza la orientación a objetos, ofreciendo un enfoque en el que los programas se expresan como la aplicación de funciones sobre datos, más que como la interacción entre entidades mutables que mezclan representación de datos, y comportamiento. Por otra parte, características tales como instanciabilidad, polimorfismo e interfaces son efectivamente parte del lenguaje.
+Asimismo, en principio se rechaza la orientaciï¿½n a objetos, ofreciendo un enfoque en el que los programas se expresan como la aplicaciï¿½n de funciones sobre datos, mï¿½s que como la interacciï¿½n entre entidades mutables que mezclan representaciï¿½n de datos, y comportamiento. Por otra parte, caracterï¿½sticas tales como instanciabilidad, polimorfismo e interfaces son efectivamente parte del lenguaje.
 
 Sintaxis
-Como el resto de la familia Lisp, la sintaxis de Clojure está construida sobre expresiones simbólicas que son convertidas en estructuras de datos por un lector antes de ser compiladas. Las expresiones se caracterizan por estar delimitadas por paréntesis, y por su notación prefija, por la que se llama al primer miembro de cada lista como función, pasándole el resto de miembros como argumentos.
+Como el resto de la familia Lisp, la sintaxis de Clojure estï¿½ construida sobre expresiones simbï¿½licas que son convertidas en estructuras de datos por un lector antes de ser compiladas. Las expresiones se caracterizan por estar delimitadas por parï¿½ntesis, y por su notaciï¿½n prefija, por la que se llama al primer miembro de cada lista como funciï¿½n, pasï¿½ndole el resto de miembros como argumentos.
 
-Esta peculiaridad, extraña para los habituados a los lenguajes más populares basados en la sintaxis del lenguaje de programación C es la base de su flexibilidad. Estructuras de datos tales como mapas, conjuntos y vectores tienen una expresión literal; no requieren transformación alguna a la hora de incorporarse al árbol sintáctico generado por el compilador. Clojure es un Lisp-1 y no está particularmente diseñado para ser compatible con otros lisps.
+Esta peculiaridad, extraï¿½a para los habituados a los lenguajes mï¿½s populares basados en la sintaxis del lenguaje de programaciï¿½n C es la base de su flexibilidad. Estructuras de datos tales como mapas, conjuntos y vectores tienen una expresiï¿½n literal; no requieren transformaciï¿½n alguna a la hora de incorporarse al ï¿½rbol sintï¿½ctico generado por el compilador. Clojure es un Lisp-1 y no estï¿½ particularmente diseï¿½ado para ser compatible con otros lisps.
 
 Macros
-Un macro es un fragmento de código que acepta como argumentos otras expresiones, sin evaluar, transformándolas previamente a su evaluación. Esto permite la aparición de "programas que crean programas": incorporaciones al lenguaje -estructuras de control de flujo- o creación de un lenguaje específico del dominio. Posibilidades en principio no alcanzables en otras familias de lenguajes sin recurrir al desarrollo de un compilador.
+Un macro es un fragmento de cï¿½digo que acepta como argumentos otras expresiones, sin evaluar, transformï¿½ndolas previamente a su evaluaciï¿½n. Esto permite la apariciï¿½n de "programas que crean programas": incorporaciones al lenguaje -estructuras de control de flujo- o creaciï¿½n de un lenguaje especï¿½fico del dominio. Posibilidades en principio no alcanzables en otras familias de lenguajes sin recurrir al desarrollo de un compilador.
 
-El sistema de macros de Clojure es muy similar al de Common Lisp con la excepción de que la versión de Clojure de la comilla inversa (llamada "comilla sintáctica") cualifica los símbolos con el espacio de nombres al que pertenece. Así se ayuda a prevenir la captura no intencionada ya que están prohibidos los bindings con nombres cualificados. Es posible forzar la expansión de una macro que las capture pero debe hacerse explícitamente. Clojure prohíbe también re-enlazar nombres globales en otros espacios de nombres que hayan sido importados en el actual.
+El sistema de macros de Clojure es muy similar al de Common Lisp con la excepciï¿½n de que la versiï¿½n de Clojure de la comilla inversa (llamada "comilla sintï¿½ctica") cualifica los sï¿½mbolos con el espacio de nombres al que pertenece. Asï¿½ se ayuda a prevenir la captura no intencionada ya que estï¿½n prohibidos los bindings con nombres cualificados. Es posible forzar la expansiï¿½n de una macro que las capture pero debe hacerse explï¿½citamente. Clojure prohï¿½be tambiï¿½n re-enlazar nombres globales en otros espacios de nombres que hayan sido importados en el actual.
 
-Otra característica de la comilla sintáctica es que permite un sistema de templating, en el que se puede especificar qué miembros de una lista deben evaluarse mediante los operadores unquote (~) y unquote-splice (~@), dando lugar a macros más concisas y manejables.
+Otra caracterï¿½stica de la comilla sintï¿½ctica es que permite un sistema de templating, en el que se puede especificar quï¿½ miembros de una lista deben evaluarse mediante los operadores unquote (~) y unquote-splice (~@), dando lugar a macros mï¿½s concisas y manejables.
 
-Características del lenguaje
-Desarrollo dinámico con una consola de evaluación (en inglés, REPL: read eval print loop).
-Representación de funciones como valores, y preferencia por la recursión y el uso de higher order functions sobre de la iteración basada en efectos secundarios.
-Números de precisión arbitraria, y representación literal de fracciones, generadas en las divisiones no enteras.
-Secuencias con evaluación perezosa (los elementos de la secuencia no se computan hasta que son necesarios, lo que permite representar conjuntos infinitos en potencia).
+Caracterï¿½sticas del lenguaje
+Desarrollo dinï¿½mico con una consola de evaluaciï¿½n (en inglï¿½s, REPL: read eval print loop).
+Representaciï¿½n de funciones como valores, y preferencia por la recursiï¿½n y el uso de higher order functions sobre de la iteraciï¿½n basada en efectos secundarios.
+Nï¿½meros de precisiï¿½n arbitraria, y representaciï¿½n literal de fracciones, generadas en las divisiones no enteras.
+Secuencias con evaluaciï¿½n perezosa (los elementos de la secuencia no se computan hasta que son necesarios, lo que permite representar conjuntos infinitos en potencia).
 Sistema integrado de estructuras de datos persistentes e inmutables.
-Control del estado (conjunto de valores que puede adquirir una entidad en el tiempo) en situaciones de concurrencia a través de sistemas transaccionales, de agentes y mediante bindings locales.
-Interacción con java: al compilarse a bytecode de la JVM, las aplicaciones escritas en Clojure pueden ser fácilmente integradas en servidores de aplicaciones u otros entornos Java con escasa complejidad adicional. Se implementan por defecto todas las interfaces posibles a nivel de clases, estructuras de datos y concurrencia para minimizar los esfuerzos requeridos para conseguir esta portabilidad.
+Control del estado (conjunto de valores que puede adquirir una entidad en el tiempo) en situaciones de concurrencia a travï¿½s de sistemas transaccionales, de agentes y mediante bindings locales.
+Interacciï¿½n con java: al compilarse a bytecode de la JVM, las aplicaciones escritas en Clojure pueden ser fï¿½cilmente integradas en servidores de aplicaciones u otros entornos Java con escasa complejidad adicional. Se implementan por defecto todas las interfaces posibles a nivel de clases, estructuras de datos y concurrencia para minimizar los esfuerzos requeridos para conseguir esta portabilidad.
 Ejemplos
-Hola mundo. Nótese que dada la naturaleza del REPL, no es necesaria una orden de impresión.
+Hola mundo. Nï¿½tese que dada la naturaleza del REPL, no es necesaria una orden de impresiï¿½n.
 
-"¡Hola, mundo!"
-Un generador de números únicos y consecutivos que soporta llamadas concurrentes:
+"ï¿½Hola, mundo!"
+Un generador de nï¿½meros ï¿½nicos y consecutivos que soporta llamadas concurrentes:
 
 (let [i (atom 0)]
   (defn generar-id-unica
-    "Devuelve un identificador numérico distinto para cada llamada."
+    "Devuelve un identificador numï¿½rico distinto para cada llamada."
     []
     (swap! i inc)))
-Una subclase anónima de java.io.Writer que no escribe en ningún sitio y una macro que lo usa para silenciar todas las expresiones evaluadas con ella.
+Una subclase anï¿½nima de java.io.Writer que no escribe en ningï¿½n sitio y una macro que lo usa para silenciar todas las expresiones evaluadas con ella.
 
 (def bit-bucket-writer
   (proxy [java.io.Writer] []
@@ -84,7 +84,7 @@ Una subclase anónima de java.io.Writer que no escribe en ningún sitio y una macr
 
 (noprint
  (println "Hello, nobody!"))
-En este ejemplo diez hilos manipulan una estructura de datos compartida, que consiste en cien vectores que contienen diez números únicos al inicio secuenciales. Cada hilo elige dos posiciones aleatorias en dos vectores aleatorios y los intercambia. Todos los cambios en los vectores se hacen dentro de transacciones usando el sistema de memoria transaccional por software de Clojure. Es por eso que incluso después de mil iteraciones no se pierde ningún número.
+En este ejemplo diez hilos manipulan una estructura de datos compartida, que consiste en cien vectores que contienen diez nï¿½meros ï¿½nicos al inicio secuenciales. Cada hilo elige dos posiciones aleatorias en dos vectores aleatorios y los intercambia. Todos los cambios en los vectores se hacen dentro de transacciones usando el sistema de memoria transaccional por software de Clojure. Es por eso que incluso despuï¿½s de mil iteraciones no se pierde ningï¿½n nï¿½mero.
 
 (defn run [nvecs nitems nthreads niters]
   (let [vec-refs (vec (map (comp ref vec)
@@ -115,31 +115,31 @@ Distinct: 1000
 ([382 318 466 963 619 22 21 273 45 596] [808 639 804 471 394 904 952 75 289 778] ...
  [484 216 622 139 651 592 379 228 242 355])
 Distinct: 1000
-Bibliografía
-Halloway, Stuart (28 de mayo de 2009), Programming Clojure (1st edición), Pragmatic Bookshelf, pp. 304, ISBN 1934356336.
-VanderHart, Luke (31 de diciembre de 2009), Practical Clojure (1st edición), Apress, p. 350, ISBN 1430272317, archivado desde el original el 17 de septiembre de 2010, consultado el 10 de febrero de 2010.
-Rathore, Amit (December 2009), Clojure in Action (1st edición), Manning, p. 475, ISBN 9781935182597.
-Fogus, Michael; Houser, Chris (January 2010), The Joy of Clojure (1st edición), Manning, p. 300, ISBN 9781935182641.
+Bibliografï¿½a
+Halloway, Stuart (28 de mayo de 2009), Programming Clojure (1st ediciï¿½n), Pragmatic Bookshelf, pp. 304, ISBN 1934356336.
+VanderHart, Luke (31 de diciembre de 2009), Practical Clojure (1st ediciï¿½n), Apress, p. 350, ISBN 1430272317, archivado desde el original el 17 de septiembre de 2010, consultado el 10 de febrero de 2010.
+Rathore, Amit (December 2009), Clojure in Action (1st ediciï¿½n), Manning, p. 475, ISBN 9781935182597.
+Fogus, Michael; Houser, Chris (January 2010), The Joy of Clojure (1st ediciï¿½n), Manning, p. 300, ISBN 9781935182641.
 Enlaces externos
-Página principal Clojure
-Repositorio del código de Clojure en GitHub
-Una visión general sobre Clojure
-Tutoriales en vídeo
+Pï¿½gina principal Clojure
+Repositorio del cï¿½digo de Clojure en GitHub
+Una visiï¿½n general sobre Clojure
+Tutoriales en vï¿½deo
 clojuredocs.org - Community-powered documentation and examples
 clojure-doc.org - Community-driven documentation site for the Clojure programming language
 Referencias
- «Principios fundamentales». Rich Hickey (en inglés). Consultado el 17 de octubre de 2008.
+ ï¿½Principios fundamentalesï¿½. Rich Hickey (en inglï¿½s). Consultado el 17 de octubre de 2008.
 Control de autoridades	
 Proyectos WikimediaWd Datos: Q51798Commonscat Multimedia: Category:Clojure
-IdentificadoresGND: 7722643-4LCCN: sh2011003332Microsoft Academic: 2777596660InformáticaArch Linux: clojureAUR: clojure-gitDebian: clojureFedora: clojureFree Software Directory: ClojureGentoo: dev-lang/clojureOpen Hub: clojureUbuntu: clojure
-Categorías: Lenguajes de programación por paradigmaLenguajes funcionalesLispSofware de 2007
-Menú de navegación
+IdentificadoresGND: 7722643-4LCCN: sh2011003332Microsoft Academic: 2777596660Informï¿½ticaArch Linux: clojureAUR: clojure-gitDebian: clojureFedora: clojureFree Software Directory: ClojureGentoo: dev-lang/clojureOpen Hub: clojureUbuntu: clojure
+Categorï¿½as: Lenguajes de programaciï¿½n por paradigmaLenguajes funcionalesLispSofware de 2007
+Menï¿½ de navegaciï¿½n
 No has accedido
-Discusión
+Discusiï¿½n
 Contribuciones
 Crear una cuenta
 Acceder
-ArtículoDiscusión
+Artï¿½culoDiscusiï¿½n
 LeerEditarVer historial
 Buscar
 Buscar en Wikipedia
@@ -147,24 +147,24 @@ Portada
 Portal de la comunidad
 Actualidad
 Cambios recientes
-Páginas nuevas
-Página aleatoria
+Pï¿½ginas nuevas
+Pï¿½gina aleatoria
 Ayuda
 Donaciones
 Notificar un error
 Herramientas
-Lo que enlaza aquí
+Lo que enlaza aquï¿½
 Cambios en enlazadas
 Subir archivo
-Páginas especiales
+Pï¿½ginas especiales
 Enlace permanente
-Información de la página
-Citar esta página
+Informaciï¿½n de la pï¿½gina
+Citar esta pï¿½gina
 Elemento de Wikidata
 Imprimir/exportar
 Crear un libro
 Descargar como PDF
-Versión para imprimir
+Versiï¿½n para imprimir
 En otros proyectos
 Wikimedia Commons
 
@@ -172,15 +172,15 @@ En otros idiomas
 ???????
 Deutsch
 English
-Français
+Franï¿½ais
 ???
 ???
-Português
+Portuguï¿½s
 ???????
 ??
-17 más
+17 mï¿½s
 Editar enlaces
-Esta página se editó por última vez el 20 abr 2021 a las 20:41.
-El texto está disponible bajo la Licencia Creative Commons Atribución Compartir Igual 3.0; pueden aplicarse cláusulas adicionales. Al usar este sitio, usted acepta nuestros términos de uso y nuestra política de privacidad.
-Wikipedia® es una marca registrada de la Fundación Wikimedia, Inc., una organización sin ánimo de lucro.
-Política de privacidadAcerca de WikipediaLimitación de responsabilidadVersión para móvilesDesarrolladoresEstadísticasDeclaración de cookiesWikimedia FoundationPowered by MediaWiki
+Esta pï¿½gina se editï¿½ por ï¿½ltima vez el 20 abr 2021 a las 20:41.
+El texto estï¿½ disponible bajo la Licencia Creative Commons Atribuciï¿½n Compartir Igual 3.0; pueden aplicarse clï¿½usulas adicionales. Al usar este sitio, usted acepta nuestros tï¿½rminos de uso y nuestra polï¿½tica de privacidad.
+Wikipediaï¿½ es una marca registrada de la Fundaciï¿½n Wikimedia, Inc., una organizaciï¿½n sin ï¿½nimo de lucro.
+Polï¿½tica de privacidadAcerca de WikipediaLimitaciï¿½n de responsabilidadVersiï¿½n para mï¿½vilesDesarrolladoresEstadï¿½sticasDeclaraciï¿½n de cookiesWikimedia FoundationPowered by MediaWiki
